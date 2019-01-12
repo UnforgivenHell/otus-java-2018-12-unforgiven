@@ -1,16 +1,13 @@
-package ru.otus.unforgiven.hw011;
+package ru.otus.unforgiven.hw0121;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Collections2;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Main {
     private static final int MEASURE_COUNT = 1;
 
-    public static void main(String... args) {
+    public static void main(String[] args) {
         Collection<Integer> example = new ArrayList<>();
         int min = 0;
         int max = 999_999;
@@ -18,9 +15,7 @@ public class Main {
             example.add(i);
         }
 
-        List<Integer> result = new ArrayList<>();
-        Collections.shuffle((List<Integer>)example);
-        calcTime(() -> result.addAll(Lists.reverse((List<Integer>)example)));
+        calcTime(() -> Collections2.permutations((List<Integer>)example));
     }
 
     private static void calcTime(Runnable runnable) {
