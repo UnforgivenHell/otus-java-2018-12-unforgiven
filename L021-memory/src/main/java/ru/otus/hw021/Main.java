@@ -25,6 +25,13 @@ public class Main {
             benchmark.run(()->new Float("0"));
 
             benchmark.run(()-> new MyClass());
+
+            benchmark.setSize(2 * size);
+            benchmark.run(()-> new String());
+            benchmark.setSize(5 * size);
+            benchmark.run(()-> new String());
+            benchmark.setSize(8 * size);
+            benchmark.run(()-> new String());
         } catch (OutOfMemoryError e) {
             System.out.println("Not Enough memory");
         } catch (InterruptedException e) {

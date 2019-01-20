@@ -16,15 +16,23 @@ class Benchmark {
         this.timeWait = timeWait;
     }
 
+    void setSize(int size) throws InterruptedException{
+        this.size = size;
+    }
+
     void run(Supplier<Object> supplier) throws InterruptedException {
+
         String type = supplier.get().getClass().getSimpleName();
         System.out.printf("type: %s%n", type);
 
         initArray();
+        this.memBefore = getMem();
+
         for (int i = 0; i < this.array.length; i++) {
             this.array[i] = supplier.get();
         }
 
+        this.memAfter = getMem();
         clearArray();
         measureAndOut();
     }
@@ -44,13 +52,12 @@ class Benchmark {
         System.out.printf("elementSize: %,d b\n", elementSize);
         System.out.println("-----------------");
     }
+
     private void initArray() throws InterruptedException {
         this.array = new Object[this.size];
-        Thread.sleep(this.timeWait);
-        this.memBefore = getMem();
     }
+
     private void clearArray() throws InterruptedException {
-        this.memAfter = getMem();
         this.array = null;
     }
 }
