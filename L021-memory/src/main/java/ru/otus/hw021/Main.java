@@ -1,6 +1,7 @@
 package ru.otus.hw021;
 
 import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
@@ -26,12 +27,15 @@ public class Main {
 
             benchmark.run(()-> new MyClass());
 
-            benchmark.setSize(2 * size);
-            benchmark.run(()-> new String());
-            benchmark.setSize(5 * size);
-            benchmark.run(()-> new String());
-            benchmark.setSize(8 * size);
-            benchmark.run(()-> new String());
+            benchmark.run(()-> new ArrayList[1]);
+            benchmark.run(()-> new ArrayList[2]);
+            benchmark.run(()-> new ArrayList[3]);
+            benchmark.run(()-> new ArrayList[4]);
+            benchmark.run(()-> new ArrayList[5]);
+            benchmark.run(()-> new ArrayList[10]);
+            benchmark.run(()-> new ArrayList[20]);
+            benchmark.run(()-> new ArrayList[50]);
+            benchmark.run(()-> new ArrayList[100]);
         } catch (OutOfMemoryError e) {
             System.out.println("Not Enough memory");
         } catch (InterruptedException e) {

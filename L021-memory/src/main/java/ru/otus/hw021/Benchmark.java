@@ -16,12 +16,7 @@ class Benchmark {
         this.timeWait = timeWait;
     }
 
-    void setSize(int size) throws InterruptedException{
-        this.size = size;
-    }
-
     void run(Supplier<Object> supplier) throws InterruptedException {
-
         String type = supplier.get().getClass().getSimpleName();
         System.out.printf("type: %s%n", type);
 
