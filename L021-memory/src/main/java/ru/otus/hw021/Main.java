@@ -2,6 +2,8 @@ package ru.otus.hw021;
 
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -27,19 +29,27 @@ public class Main {
 
             benchmark.run(()-> new MyClass());
 
-            benchmark.run(()-> new ArrayList[1]);
-            benchmark.run(()-> new ArrayList[2]);
-            benchmark.run(()-> new ArrayList[3]);
-            benchmark.run(()-> new ArrayList[4]);
-            benchmark.run(()-> new ArrayList[5]);
-            benchmark.run(()-> new ArrayList[10]);
-            benchmark.run(()-> new ArrayList[20]);
-            benchmark.run(()-> new ArrayList[50]);
-            benchmark.run(()-> new ArrayList[100]);
+
+            benchmark.run(()-> integerArrayList(1));
+            benchmark.run(()-> integerArrayList(2));
+            benchmark.run(()-> integerArrayList(3));
+            benchmark.run(()-> integerArrayList(4));
+            benchmark.run(()-> integerArrayList(5));
+            benchmark.run(()-> integerArrayList(10));
+            benchmark.run(()-> integerArrayList(20));
+            benchmark.run(()-> integerArrayList(50));
+            benchmark.run(()-> integerArrayList(100));
         } catch (OutOfMemoryError e) {
             System.out.println("Not Enough memory");
         } catch (InterruptedException e) {
             System.out.printf("Interrupted exception happened, message: %s\n", e.getMessage());
         }
+    }
+    private static List<Integer> integerArrayList(int size){
+        List<Integer> list = new ArrayList<Integer>();
+        for (int i = 1; i <= size; i++) {
+            list.add(i);
+        }
+        return list;
     }
 }
