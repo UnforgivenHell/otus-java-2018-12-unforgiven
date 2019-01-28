@@ -1,9 +1,6 @@
 package ru.otus.hw031;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Random;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -31,31 +28,31 @@ public class Main {
         myArrayString.addAll(2, Arrays.asList(new String[]{"Q", "W", "E", "R", "T", "Y"}));
         System.out.printf("Added collection [Q, W, E, R, T, Y] to position 2: %s%n", myArrayString);
 
-        myArrayString.addAll(Arrays.asList(new String[]{"11", "22"}));
+        Collections.addAll(myArrayString, "11", "22");
         System.out.printf("Added collection [11, 22] lasted: %s%n", myArrayString);
 
-        System.out.println("Sublist (2, 8): " + myArrayString.subList(2, 8));
+        System.out.printf("Sublist (2, 8): %s%n", myArrayString.subList(2, 8));
 
         myArrayString.clear();
-        System.out.println("Cleared array: " + myArrayString);
+        System.out.printf("Cleared array: %s%n", myArrayString);
 
         MyArrayList<Integer> myArrayInteger = new MyArrayList<>();
-        for(int i = 0; i < 20; i++) {
+        for(int i = 0; i < 10; i++) {
             myArrayInteger.add(rn.nextInt(1000));
         }
-        System.out.println("Before sorted array: " + myArrayInteger);
-        myArrayInteger.sort(null);
-        System.out.println("After sorted array: " + myArrayInteger);
+        System.out.printf("Before sorted array: %s%n", myArrayInteger);
+        Collections.sort(myArrayInteger);
+        System.out.printf("After sorted array: %s%n", myArrayInteger);
 
         MyArrayList<Integer> myArrayIntegerSmall = new MyArrayList<>();
-        myArrayIntegerSmall.addAll(Arrays.asList(new String[10]));
+        myArrayIntegerSmall.addAll(Arrays.asList(new String[5]));
         MyArrayList<Integer> myArrayIntegerBig = new MyArrayList<>();
-        myArrayIntegerBig.addAll(Arrays.asList(new String[30]));
+        Collections.addAll(myArrayIntegerBig, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15);
 
         myArrayString.copy(myArrayIntegerSmall, myArrayInteger);
-        System.out.println("Copied small array: " + myArrayIntegerSmall);
+        System.out.printf("Copied small array: %s%n", myArrayIntegerSmall);
 
-        myArrayString.copy(myArrayIntegerBig, myArrayInteger);
-        System.out.println("Copied big array: " + myArrayIntegerBig);
+        Collections.copy(myArrayIntegerBig, myArrayInteger);
+        System.out.printf("Copied big array: %s%n", myArrayIntegerBig);
     }
 }

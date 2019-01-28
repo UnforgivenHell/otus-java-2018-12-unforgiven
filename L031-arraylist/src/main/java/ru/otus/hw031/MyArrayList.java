@@ -2,7 +2,6 @@ package ru.otus.hw031;
 
 import java.util.*;
 
-
 public class MyArrayList<T>  implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
 
@@ -71,7 +70,7 @@ public class MyArrayList<T>  implements List<T> {
 
     @Override
     public ListIterator<T> listIterator(int index){
-        return listIterator(0);
+        return new ListItr(index);
     }
 
     @Override
@@ -105,7 +104,7 @@ public class MyArrayList<T>  implements List<T> {
 
     @Override
     public void add(int index, T element) {
-        rangeCheckForAdd(index);
+        throwIsIncorrectRange(index);
         System.arraycopy(this.array, index, this.array, index + 1, this.size - index);
         increaseArraySize();
         this.array[index] = element;
@@ -199,6 +198,7 @@ public class MyArrayList<T>  implements List<T> {
             }
             string.append("]");
             string.append("; size = " + this.size);
+            string.append("; arraySize = " + this.array.length);
         }
         return String.valueOf(string);
     }
@@ -238,11 +238,9 @@ public class MyArrayList<T>  implements List<T> {
         return listIterator();
     }
 
-
-
     private boolean isCorrectRange(int index) {
         boolean res = true;
-        if (index > this.size || index < 0)
+        if (index >= this.size || index < 0)
             res = false;
         return res;
     }
@@ -258,14 +256,9 @@ public class MyArrayList<T>  implements List<T> {
         }
     }
 
-    private void rangeCheckForAdd(int index) {
-        if (index < 0 || index > this.size)
-            throw new IndexOutOfBoundsException(String.format("Current index: %d, Size: %d", index, this.size));
-    }
-
     private void increaseArraySize() {
         if (this.array.length < this.size + 1) {
-            array = Arrays.copyOf(this.array, this.array.length + 1);
+            array = Arrays.copyOf(this.array, this.array.length + this.DEFAULT_CAPACITY);
         }
     }
 
@@ -289,6 +282,87 @@ public class MyArrayList<T>  implements List<T> {
                 dest.set(i, src.get(i));
             }
         }
+    }
 
+    private class Itr implements Iterator<T>{
+        int cursor = 0;
+        int lastRet = -1;
+
+        Itr() {}
+
+        public boolean hasNext() {
+            return cursor != size();
+        }
+        public T next(){
+            int i = cursor;
+            T next = get(i);
+            lastRet = i;
+            cursor = i + 1;
+            return next;
+        }
+        public void remove() {
+            if (lastRet < 0) {
+                throw new IllegalStateException();
+            }
+
+            try {
+                MyArrayList.this.remove(lastRet);
+                if (lastRet < cursor)
+                    cursor--;
+                lastRet = -1;
+            } catch (IndexOutOfBoundsException e) {
+                throw new ConcurrentModificationException();
+            }
+        }
+    }
+
+    private class ListItr extends Itr implements ListIterator<T> {
+        ListItr(int index) {
+            cursor = index;
+        }
+
+        public boolean hasPrevious() {
+            return cursor != 0;
+        }
+
+        public T previous() {
+            try {
+                int i = cursor - 1;
+                T previous = get(i);
+                lastRet = cursor = i;
+                return previous;
+            } catch (IndexOutOfBoundsException e) {
+                throw new NoSuchElementException();
+            }
+        }
+
+        public int nextIndex() {
+            return cursor;
+        }
+
+        public int previousIndex() {
+            return cursor-1;
+        }
+
+        public void set(T e) {
+            if (lastRet < 0)
+                throw new IllegalStateException();
+            try {
+                MyArrayList.this.set(lastRet, e);
+            } catch (IndexOutOfBoundsException ex) {
+                throw new ConcurrentModificationException();
+            }
+        }
+
+        public void add(T e) {
+            try {
+                int i = cursor;
+                MyArrayList.this.add(i, e);
+                lastRet = -1;
+                cursor = i + 1;
+            } catch (IndexOutOfBoundsException ex) {
+                throw new ConcurrentModificationException();
+            }
+        }
     }
 }
