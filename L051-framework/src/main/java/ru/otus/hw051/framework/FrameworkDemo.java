@@ -17,22 +17,19 @@ import java.util.stream.Stream;
 
 public class FrameworkDemo
 {
-    public static void main(String[] args) throws IOException
-    {
-        String packageName = "ru.otus.hw051.tests";
+    public static void main(String arg) throws IOException {
+        String packageName = arg;//"ru.otus.hw051.tests";
 
         ImmutableSet<ClassPath.ClassInfo> testClasses = getClassesFromPackage(packageName);
 
         processTestClasses(testClasses);
     }
 
-    private static ImmutableSet<ClassPath.ClassInfo> getClassesFromPackage(final String packageName) throws IOException
-    {
+    private static ImmutableSet<ClassPath.ClassInfo> getClassesFromPackage(final String packageName) throws IOException {
         return ClassPath.from(ClassLoader.getSystemClassLoader()).getTopLevelClasses(packageName);
     }
 
-    private static void processTestClasses(final ImmutableSet<ClassPath.ClassInfo> classes)
-    {
+    private static void processTestClasses(final ImmutableSet<ClassPath.ClassInfo> classes) {
         for (final ClassPath.ClassInfo classInfo : classes) {
             try {
                 declaredMethodsProcessor(Class.forName(classInfo.getName()));
@@ -43,8 +40,7 @@ public class FrameworkDemo
         }
     }
 
-    private static void declaredMethodsProcessor(Class<?> cl)
-    {
+    private static void declaredMethodsProcessor(Class<?> cl) {
         Method[] methods = cl.getDeclaredMethods();
 
         Optional<Method> before = getAnnotatedMethodFrom(methods, Before.class);
@@ -52,25 +48,22 @@ public class FrameworkDemo
 
         for (final Method m : methods) {
             if (m.isAnnotationPresent(Test.class)) {
-
                 try {
                     Object o = cl.newInstance();
 
                     if (before.isPresent()) {
-                        String beforeMethodName = before.get().getName();
-                        cl.getMethod(beforeMethodName).invoke(o);
+                        before.get().invoke(o);
                     }
 
                     String testMethodName = m.getName();
                     cl.getMethod(testMethodName).invoke(o);
+                    //m.invoke(o);
 
                     if (after.isPresent()) {
-                        String afterMethodName = after.get().getName();
-                        cl.getMethod(afterMethodName).invoke(o);
+                        after.get().invoke(o);
                     }
                 }
-                catch (IllegalAccessException | InvocationTargetException |
-                    NoSuchMethodException | InstantiationException e) {
+                catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
                     e.printStackTrace();
                 }
             }

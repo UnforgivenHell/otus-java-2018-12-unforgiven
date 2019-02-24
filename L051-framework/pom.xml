@@ -55,7 +55,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>ru.otus.hw051.framework.FrameworkDemo</mainClass>
+                            <mainClass>ru.otus.hw051.MainClass</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
