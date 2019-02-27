@@ -15,11 +15,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FrameworkDemo
-{
-    public static void main(String arg) throws IOException {
-        String packageName = arg;//"ru.otus.hw051.tests";
+public class TestFrameworkRunner{
+    private static final String RED_BOLD = "\033[31m";
+    private static final String ANSI_RESET = "\u001B[0m";
 
+    private int countSuccess = 0;
+    private int countFail = 0;
+
+    public void runTestsByPackageName(String packageName) throws IOException {
         ImmutableSet<ClassPath.ClassInfo> testClasses = getClassesFromPackage(packageName);
 
         processTestClasses(testClasses);
@@ -29,7 +32,7 @@ public class FrameworkDemo
         return ClassPath.from(ClassLoader.getSystemClassLoader()).getTopLevelClasses(packageName);
     }
 
-    private static void processTestClasses(final ImmutableSet<ClassPath.ClassInfo> classes) {
+    private void processTestClasses(final ImmutableSet<ClassPath.ClassInfo> classes) {
         for (final ClassPath.ClassInfo classInfo : classes) {
             try {
                 declaredMethodsProcessor(Class.forName(classInfo.getName()));
@@ -40,12 +43,14 @@ public class FrameworkDemo
         }
     }
 
-    private static void declaredMethodsProcessor(Class<?> cl) {
+    private void declaredMethodsProcessor(Class<?> cl) {
         Method[] methods = cl.getDeclaredMethods();
 
         Optional<Method> before = getAnnotatedMethodFrom(methods, Before.class);
         Optional<Method> after = getAnnotatedMethodFrom(methods, After.class);
 
+        countSuccess = 0;
+        countFail = 0;
         for (final Method m : methods) {
             if (m.isAnnotationPresent(Test.class)) {
                 try {
@@ -55,19 +60,26 @@ public class FrameworkDemo
                         before.get().invoke(o);
                     }
 
-                    String testMethodName = m.getName();
-                    cl.getMethod(testMethodName).invoke(o);
-                    //m.invoke(o);
+                    m.invoke(o);
 
                     if (after.isPresent()) {
                         after.get().invoke(o);
                     }
+                    countSuccess++;
                 }
-                catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
-                    e.printStackTrace();
+                catch (IllegalAccessException | InvocationTargetException | InstantiationException | RuntimeException e) {
+                    countFail++;
                 }
             }
         }
+
+        if (countSuccess >= 1){
+            System.out.printf("Success: %d%s ", countSuccess, ANSI_RESET);
+        }
+        if (countFail >= 1){
+            System.out.printf("%sError: %d%s", RED_BOLD, countFail, ANSI_RESET);
+        }
+        System.out.println("\n----------------------------------------");
     }
 
     private static Optional<Method> getAnnotatedMethodFrom(final Method[] methods, final Class<? extends Annotation> annotation) {

@@ -41,7 +41,7 @@ public class FrameworkTest
     private void print(String annotation){
         System.out.println("@" + annotation + ": " + this.localString);
         if (annotation == "After") {
-            System.out.println("----------------------------------------");
+            System.out.println("----------------");
         }
     }
 }
