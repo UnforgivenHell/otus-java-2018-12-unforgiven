@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 
-public class mygson {
+public class MyGson {
 
     public static String toJson(Object object) {
         if ( object == null ) return null;
