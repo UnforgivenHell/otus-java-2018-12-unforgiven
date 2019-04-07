@@ -19,4 +19,6 @@ public interface DataSetDAO {
     <T extends DataSet> void deleteAll(Class<T> t) throws MyOrmException;
 
     <T extends DataSet> T update(T t) throws MyOrmException;
+
+    <T extends DataSet> void createTable(Class<T> t) throws MyOrmException;
 }

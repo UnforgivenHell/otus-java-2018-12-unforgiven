@@ -99,4 +99,15 @@ public class Executor {
             }
         }
     }
+
+    public static <T extends DataSet> void createTableIfNotExist(Connection connection, Class<T> t) throws MyOrmException {
+        String queryString = getCreateTableIfNotExistQuery(t);
+        if (!queryString.isEmpty()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)){
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new MyOrmException(e);
+            }
+        }
+    }
 }

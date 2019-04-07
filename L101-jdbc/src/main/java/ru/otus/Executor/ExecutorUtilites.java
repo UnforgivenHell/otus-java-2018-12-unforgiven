@@ -56,11 +56,9 @@ class ExecutorUtilites {
         List<Field> fields = getAllFieldsWithoutID(t);
         if (fields.size() > 0) {
             String queryStringPart1 = fields.stream()
-                    //.filter(line -> ! "id".equals(line.getName()))
                     .map(Field::getName)
                     .collect(Collectors.joining(", ", "INSERT INTO " + ConnectionHelper.getTable(t) + " (", ")"));
             String queryStringPart2 = fields.stream()
-                    //.filter(line -> ! "id".equals(line.getName()))
                     .map(x -> "?")
                     .collect(Collectors.joining(", ", " VALUES (", ")"));
             return queryStringPart1 + queryStringPart2;
@@ -108,5 +106,22 @@ class ExecutorUtilites {
             fields.get(i).setAccessible(true);
             preparedStatement.setObject(i + 1, fields.get(i).get(t));
         }
+    }
+
+    static <T> String getCreateTableIfNotExistQuery(Class<T> objectClass){
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("create table if not exists " + ConnectionHelper.getTable(objectClass) + " ( id serial primary key");
+        List<Field> fields = new ArrayList<>(Arrays.asList(objectClass.getDeclaredFields()));
+        for (Field field : fields) {
+            Class<?> valClass = field.getType();
+            field.setAccessible(true);
+            queryString.append(", " + field.getName() + " ");
+            if (Character.class.isAssignableFrom(valClass) || String.class.isAssignableFrom(valClass))
+                queryString.append("varchar(255)");
+            else if (Integer.class.isAssignableFrom(valClass))
+                queryString.append("int");
+        }
+        queryString.append(");");
+        return queryString.toString();
     }
 }

@@ -13,7 +13,7 @@ public class MainClass {
     public static void main(String[] args) throws MyOrmException {
         try (final Connection connection = ConnectionHelper.getMyPostgresqlConnection()){
             DataSetDAO dao = new DataSetDAOImpl(connection);
-
+            dao.createTable(UserDataSet.class);
             dao.deleteAll(UserDataSet.class);
 
             UserDataSet user1 = new UserDataSet("Sergey", 33);

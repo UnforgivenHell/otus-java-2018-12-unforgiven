@@ -5,12 +5,12 @@ import ru.otus.Annotation.TableName;
 @TableName("otus_users")
 public class UserDataSet extends DataSet {
     private String name;
-    private int age;
+    private Integer age;
 
     public UserDataSet() {
     }
 
-    public UserDataSet(String name, int age) {
+    public UserDataSet(String name, Integer age) {
         super(-1);
         this.name = name;
         this.age = age;
@@ -24,11 +24,11 @@ public class UserDataSet extends DataSet {
         this.name = name;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

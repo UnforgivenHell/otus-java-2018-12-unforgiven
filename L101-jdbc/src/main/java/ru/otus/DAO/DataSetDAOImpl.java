@@ -43,4 +43,8 @@ public class DataSetDAOImpl implements DataSetDAO {
     public <T extends DataSet> T update(T t) throws MyOrmException {
         return Executor.update(connection, t);
     }
+    @Override
+    public <T extends DataSet> void createTable(Class<T> t) throws MyOrmException {
+        Executor.createTableIfNotExist(connection, t);
+    }
 }

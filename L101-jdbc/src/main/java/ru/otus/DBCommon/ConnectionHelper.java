@@ -24,7 +24,6 @@ public class ConnectionHelper {
                 "postgres?" +                //db name
                 "user=postgres&" +           //login
                 "password=123456789";        //password
-
         return DriverManager.getConnection(url);
     }
 }
