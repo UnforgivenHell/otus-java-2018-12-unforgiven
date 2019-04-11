@@ -10,12 +10,13 @@ import java.util.List;
 import static ru.otus.Executor.ExecutorUtilites.*;
 
 public class Executor {
+    private static ClassMetaDataHolder classData = new ClassMetaDataHolder();
 
     public static <T extends DataSet> T save(Connection connection, T t) throws MyOrmException {
-        String queryString = getSaveQuery(t.getClass());
+        String queryString = classData.getClassSaveQuery(t.getClass());
         if (!queryString.isEmpty()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(queryString, new String[]{"id"})){
-                List<Field> fields = getAllFieldsWithoutID(t.getClass());
+                List<Field> fields = classData.getClassAllFieldsWithoutID(t.getClass());
                 fillQueryParameters(preparedStatement, fields, t);
                 preparedStatement.executeUpdate();
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
@@ -33,7 +34,7 @@ public class Executor {
     }
 
     public static <T extends DataSet> T load(Connection connection, long id, Class<T> t) throws MyOrmException {
-        String queryString = getLoadQuery(t);
+        String queryString = classData.getClassLoadQuery(t);
         if (!queryString.isEmpty()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)){
                 preparedStatement.setLong(1, id);
@@ -47,7 +48,7 @@ public class Executor {
     }
 
     public static <T extends DataSet> List<T> loadAll(Connection connection, Class<T> t) {
-        String queryString = getLoadAllQuery(t);
+        String queryString = classData.getClassLoadAllQuery(t);
         if (!queryString.isEmpty()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)){
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -60,10 +61,10 @@ public class Executor {
     }
 
     public static <T extends DataSet> T update(Connection connection, T t) throws MyOrmException {
-        String queryString = getUpdateQuery(t.getClass());
+        String queryString = classData.getClassUpdateQuery(t.getClass());
         if (!queryString.isEmpty()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)){
-                List<Field> fields = getAllFields(t.getClass());
+                List<Field> fields = classData.getClassAllFields(t.getClass());
                 fillQueryParameters(preparedStatement, fields, t);
                 preparedStatement.setLong(fields.size() + 1, t.getId());
                 preparedStatement.executeUpdate();
