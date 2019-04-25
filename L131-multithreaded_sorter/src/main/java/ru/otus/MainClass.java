@@ -11,8 +11,8 @@ import static java.lang.System.currentTimeMillis;
 
 class MainClass {
     private static final int numberOfThreads = 4;
-    private static final int size = 1_000;
-    private static final int maxRandomValue = 10_000;
+    private static final int size = 10_000;
+    private static final int maxRandomValue = 100_000;
 
     public static void main(String[] args) {
         List<Integer> srcList = new ArrayList<>();
@@ -28,9 +28,13 @@ class MainClass {
 
         List<Integer> oneThreadList = new ArrayList<>(srcList);
         Collections.sort(oneThreadList);
+        System.out.println("one thread sorted array");
+        System.out.println(oneThreadList.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(",")));
 
         List<Integer> multiThreadList = SortFactory.getSortedArray(srcList, numberOfThreads);
-        System.out.println("sorted array");
+        System.out.println("multi thread sorted array");
         System.out.println(multiThreadList.stream()
                 .map(Object::toString)
                 .collect(Collectors.joining(",")));
