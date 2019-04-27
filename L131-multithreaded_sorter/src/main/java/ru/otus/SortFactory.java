@@ -17,12 +17,12 @@ class SortFactory {
             partitionList[i] = new ArrayList<>(srcList.subList(i * parts, (i + 1) * parts));
     }
 
-    public static List<Integer> getSortedArray (List<Integer> srcList, int numberOfThreads) {
+    public static List<Integer> getSortedArray (List<Integer> srcList, int numberOfThreads) throws InterruptedException {
         SortFactory factory = new SortFactory(srcList, numberOfThreads);
         return factory.runThreadsAndGetList();
     }
 
-    private List<Integer> runThreadsAndGetList() {
+    private List<Integer> runThreadsAndGetList() throws InterruptedException {
         Thread[] threads = new Thread[numberOfThreads];
 
         for (int i = 0; i <= numberOfThreads - 1; i++) {
@@ -31,7 +31,7 @@ class SortFactory {
         }
 
         for (int i = 0; i < numberOfThreads; i++) {
-            while (threads[i].isAlive()) {}
+            threads[i].join();
         }
 
         List<Integer> sortBuf = mergeArrays(partitionList[0], partitionList[1]);

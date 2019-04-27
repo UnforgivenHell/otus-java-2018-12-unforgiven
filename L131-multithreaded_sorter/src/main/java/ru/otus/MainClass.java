@@ -7,14 +7,12 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 
-import static java.lang.System.currentTimeMillis;
-
 class MainClass {
     private static final int numberOfThreads = 4;
     private static final int size = 10_000;
-    private static final int maxRandomValue = 100_000;
+    private static final int maxRandomValue = 1_000_000;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         List<Integer> srcList = new ArrayList<>();
 
         for (int i=0; i < size; i++) {
